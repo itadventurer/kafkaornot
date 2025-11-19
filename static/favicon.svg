@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+    <!-- Background: Slate 900 with rounded corners -->
+    <rect width="64" height="64" rx="12" fill="#0f172a" />
+
+    <!-- The ">" Prompt: Kafka Green -->
+    <path d="M20 16 L48 32 L20 48"
+        fill="none"
+        stroke="#00C08B"
+        stroke-width="8"
+        stroke-linecap="round"
+        stroke-linejoin="round" />
+</svg>

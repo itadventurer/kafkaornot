@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Kafka or Not?{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <meta property="og:title" content="Kafka or Not?" />
+    <meta property="og:url" content="{{ request.url }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="Kafka or Not? Find out if you should use Kafka or not." />
+    <meta property="og:image" content="https://kafkaornot.io/static/kafkaornot.png">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.svg') }}">
+
 </head>
 
 <body>
@@ -28,6 +36,12 @@
             <a href="/" class="restart-link">Start Over</a>
         </div>
     </div>
+
+    <script async src="https://plausible.io/js/pa-CuQkVEWXXPAR1-HvCMAMJ.js"></script>
+    <script>
+        window.plausible = window.plausible || function () { (plausible.q = plausible.q || []).push(arguments) }, plausible.init = plausible.init || function (i) { plausible.o = i || {} };
+        plausible.init()
+    </script>
 
 </body>
 

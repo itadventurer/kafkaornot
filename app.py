@@ -7,7 +7,7 @@ from psycopg2.extras import Json
 from flask import Flask, render_template, request, redirect, url_for, abort, make_response
 from dotenv import load_dotenv
 from contextlib import contextmanager
-
+load_dotenv()
 app = Flask(__name__)
 
 # Load Configuration
@@ -228,4 +228,4 @@ def admin():
     return render_template('admin.html', stats=stats)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5005)
