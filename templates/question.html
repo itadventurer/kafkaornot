@@ -1,26 +1,21 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Kafka or Not?</title>
-</head>
+{% block title %}Question - Kafka or Not?{% endblock %}
 
-<body>
-    <h2>{{ question.text }}</h2>
+{% block content %}
+<span
+    style="font-size: 0.75rem; color: var(--accent-color); text-transform: uppercase; letter-spacing: 1px; font-weight: bold; display:block; margin-bottom:10px;">
+    Assessment
+</span>
 
-    <ul>
-        {% for key, answer in question.answers.items() %}
-        <li>
-            <!-- The Magic Link: Passes the Next ID, checks Session, and records Current Answer -->
-            <a href="/q/{{ answer.next_id }}?session_id={{ session_id }}&ans={{ q_id }}:{{ key }}">
-                {{ answer.text }}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
+<h1>{{ question.text }}</h1>
 
-    <hr>
-    <small>Session: {{ session_id }}</small>
-</body>
-
-</html>
+<div class="options-grid">
+    {% for key, answer in question.answers.items() %}
+    <a href="/q/{{ answer.next_id }}?ans={{ q_id }}:{{ key }}" class="option-btn">
+        <span class="option-text">{{ answer.text }}</span>
+        <span class="arrow">→</span>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

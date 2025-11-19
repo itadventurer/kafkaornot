@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kafka or Not?{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="logo">
+            <a href="/">
+                > <span>kafkaornot.io</span>_
+            </a>
+        </div>
+
+        <div class="card">
+            {% block content %}{% endblock %}
+        </div>
+
+        <div class="footer">
+            Made with ❤️ by <a href="https://linkedin.com/in/anatolyzelenin" target="_blank">Anatoly
+                Zelenin</a> and 🤖 Gemini.
+            <br>
+            <a href="/" class="restart-link">Start Over</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

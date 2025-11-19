@@ -1,17 +1,62 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>{{ meta.title }}</title>
-</head>
+{% block title %}{{ meta.title }}{% endblock %}
 
-<body>
-    <h1>{{ meta.title }}</h1>
-    <h3>{{ meta.subtitle }}</h3>
+{% block content %}
+<h1>{{ meta.title }}</h1>
+<h2 style="font-size: 1rem; margin-bottom: 40px; opacity: 0.7;">{{ meta.subtitle }}</h2>
 
-    <p>Should you use Kafka? Or is Postgres enough? Let's find out.</p>
+<div style="text-align: left; margin-bottom: 40px;">
+    <p>
+        <strong>"Just use Postgres"</strong> is a common sentiment. And honestly, they are usually right.
+    </p>
 
-    <a href="/q/{{ meta.start_id }}?session_id={{ session_id }}">Start Assessment</a>
-</body>
+    <p>
+        But we developers love <strong>complex tech</strong>. We crave the fun (and the sleepless nights) of managing
+        distributed state,
+        rebalancing partitions, and debugging race conditions that only happen on Tuesdays.
+    </p>
 
-</html>
+    <p>
+        <strong>"It depends"</strong> is always the correct answer. But it is also <strong>totally useless</strong> when
+        you have a deadline.
+    </p>
+
+    <p>
+        So, let's figure it out. Do you actually need a distributed log, or do you just need a hug?
+    </p>
+</div>
+
+<div class="options-grid">
+    <a href="/q/{{ meta.start_id }}" class="start-btn">
+        Debug My Architecture
+    </a>
+</div>
+
+{% if stats %}
+<div style="margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border-color);">
+    <h3
+        style="text-align: center; font-size: 0.9rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px;">
+        Community Consensus</h3>
+
+    <div style="margin-top: 20px;">
+        {% for stat in stats %}
+        <div style="margin-bottom: 12px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem;">
+                <span style="color: var(--text-primary);">{{ stat.title }}</span>
+                <span style="color: var(--kafka-green); font-weight: bold;">{{ stat.percent }}%</span>
+            </div>
+            <div style="background-color: rgba(255,255,255,0.05); height: 6px; border-radius: 3px; overflow: hidden;">
+                <div style="width: {{ stat.percent }}%; background-color: var(--accent-color); height: 100%;"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <p style="text-align: center; font-size: 0.8rem; margin-top: 15px; opacity: 0.5;">
+        Based on architects who have questioned their life choices here.
+    </p>
+</div>
+{% endif %}
+
+{% endblock %}

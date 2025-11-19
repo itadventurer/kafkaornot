@@ -1,48 +1,43 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Verdict: {{ result.title }}</title>
-</head>
+{% block title %}Verdict: {{ result.title }}{% endblock %}
 
-<body>
-    <h1>{{ result.title }}</h1>
+{% block content %}
+<span class="verdict-badge">Verdict</span>
 
-    <h2>Verdict: {{ result.verdict }}</h2>
+<h1>{{ result.title }}</h1>
+<h2>{{ result.verdict }}</h2>
 
-    <div style="background-color: #f0f0f0; padding: 20px; border: 1px solid #ccc;">
-        <p style="white-space: pre-line">{{ result.description }}</p>
-
-        <h3>Recommendation:</h3>
-        <p>{{ result.recommendation }}</p>
-    </div>
-
-    <br><br>
-
-    {% if message %}
-    <h3 style="color: green;">{{ message }}</h3>
+<div class="description">
+    {% if result.description %}
+    {% for line in result.description.split('\n') %}
+    {% if line.strip() %}
+    <p style="color: var(--text-primary);">{{ line }}</p>
     {% endif %}
-
-    {% if not hide_form %}
-    <hr>
-    <h3>Want help implementing this?</h3>
-    <p>I am a Kafka Consultant. Leave your details and I'll yell at your architecture diagrams.</p>
-
-    <form action="/capture-lead" method="POST">
-        <input type="hidden" name="session_id" value="{{ session_id }}">
-
-        <label>Name:</label><br>
-        <input type="text" name="name"><br><br>
-
-        <label>Email:</label><br>
-        <input type="email" name="email" required><br><br>
-
-        <button type="submit">Send</button>
-    </form>
+    {% endfor %}
     {% endif %}
+</div>
 
-    <br>
-    <a href="/">Start Over</a>
-</body>
+<div class="recommendation-box">
+    {{ result.recommendation }}
+</div>
 
-</html>
+<div class="divider"></div>
+
+{% if message %}
+<h3 style="color: var(--kafka-green); text-align: center;">{{ message }}</h3>
+{% elif not hide_form %}
+<div style="margin-bottom: 20px;">
+    <h3 style="font-size: 1.1rem; margin-bottom: 8px; color: var(--text-primary);">Need help building this?</h3>
+    <p style="font-size: 0.9rem; color: var(--text-secondary);">I am a Kafka Trainer and Consultant. Leave your details
+        and I'll
+        yell at your architecture diagrams or maybe just help you with your architecture.</p>
+</div>
+
+<form action="/capture-lead" method="POST">
+    <input type="text" name="name" placeholder="Name (Optional)">
+    <input type="email" name="email" required placeholder="name@company.com">
+    <button type="submit" class="submit-btn">Send Details</button>
+</form>
+{% endif %}
+{% endblock %}
