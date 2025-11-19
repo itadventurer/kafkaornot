@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Kafka or Not?</title>
+</head>
+
+<body>
+    <h2>{{ question.text }}</h2>
+
+    <ul>
+        {% for key, answer in question.answers.items() %}
+        <li>
+            <!-- The Magic Link: Passes the Next ID, checks Session, and records Current Answer -->
+            <a href="/q/{{ answer.next_id }}?session_id={{ session_id }}&ans={{ q_id }}:{{ key }}">
+                {{ answer.text }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+    <small>Session: {{ session_id }}</small>
+</body>
+
+</html>

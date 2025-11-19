@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin Stats</title>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Admin Dashboard</h1>
+
+    <p><strong>Total Sessions:</strong> {{ total }}</p>
+    <p><strong>Leads Captured:</strong> {{ leads }}</p>
+
+    <h3>Latest 50 Sessions</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Results (JSON)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                <td>{{ row[4] }}</td> <!-- created_at -->
+                <td>{{ row[0] }}</td> <!-- session_id -->
+                <td>{{ row[2] }}</td> <!-- name -->
+                <td>{{ row[3] }}</td> <!-- email -->
+                <td>{{ row[1] }}</td> <!-- results -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+
+</html>

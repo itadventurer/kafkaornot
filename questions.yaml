@@ -1,0 +1,99 @@
+meta:
+  title: "Kafka or Not?"
+  subtitle: "Or: How I Learned to Stop Worrying and Love the Log"
+  start_id: "q_volume"
+
+results:
+  result_monolith:
+    title: "🏠 The Monolith of Peace"
+    verdict: "Just Use Postgres."
+    description: |
+      You are building "Inside Data." According to Pat Helland, data inside a service boundary should be consistent and cozy.
+
+      You don't have an engineering problem; you have a desire to over-engineer. Using Kafka here would be like using a semi-truck to deliver a pizza. It’s cool, but parking is a nightmare.
+    recommendation: "Stick to a single Postgres instance. Enjoy your ACID transactions and JOINs while they last."
+
+  result_outbox:
+    title: "📦 The Log in the Database"
+    verdict: "Use Postgres (with a twist)."
+    description: |
+      You are in the "Danger Zone." You need to decouple your services, but maintaining a Kafka cluster might cost you your sanity (or your weekends).
+
+      You need the *semantics* of a Log without the *infrastructure* of a Log.
+    recommendation: |
+      If deploying and operating Kafka is too much of a hassle, you could try to implement a Log in the Database. But be careful, this is a bit of a hack and it's not as easy as it sounds. Maybe you are just better off using Kafka.
+
+  result_firehose:
+    title: "🌊 The Firehose"
+    verdict: "Definitely Kafka."
+    description: |
+      Postgres is great, but physics is physics. You are pushing Yottabytes of data. If you tried this with a relational database, the VACUUM process alone would cause a black hole.
+
+      You aren't just decoupling teams; you are decoupling your disk I/O.
+    recommendation: "Spin up the cluster. Hire the experts. You have a genuine Big Data™ problem."
+
+  result_nervous_system:
+    title: "🚀 The Nervous System"
+    verdict: "Use Kafka."
+    description: |
+      You have an "Outside Data" problem. You have multiple teams who hate waiting on each other.
+
+      If you used a shared Postgres database here, you would create a "Distributed Monolith" — a hellscape where changing a column name in Team A triggers a NullPointerException in Team B.
+    recommendation: "You need the Log. Kafka acts as the nervous system, allowing teams to evolve independently. The infrastructure pain is the price you pay for organizational freedom."
+
+questions:
+  q_volume:
+    text: "First things first: How hard is your network crying?"
+    answers:
+      big_data:
+        text: "It's screaming. We are doing Yottabytes/sec of telemetry."
+        next_id: "result_firehose"
+      human_scale:
+        text: "Human scale. Users buying socks, updating profiles, standard business stuff."
+        next_id: "q_teams"
+
+  q_teams:
+    text: "Who is invited to the party? (How many distinct teams touch this data?)"
+    answers:
+      solo:
+        text: "Just me. Maybe a intern named Gary."
+        next_id: "result_monolith"
+      small_alliance:
+        text: "A small alliance (2-3 teams)."
+        next_id: "q_ops"
+      massive_org:
+        text: "A massive, sprawling org chart. We communicate via JIRA tickets."
+        next_id: "q_coupling"
+
+  q_ops:
+    text: "Who fixes this system when it implodes at 3:00 AM?"
+    answers:
+      solo:
+        text: "Me. And I really value my sleep."
+        next_id: "result_outbox"
+      platform_team:
+        text: "We have a Platform Team / We have budget for Managed Cloud."
+        next_id: "q_history"
+
+  q_history:
+    text: "The Time Travel Question: If you deploy a brand new microservice today, does it need to read data from last Tuesday?"
+    answers:
+      "yes":
+        text: "Yes. We need to replay history to build new state."
+        next_id: "result_nervous_system"
+      "no":
+        text: "No. The past is dead. We only care about the Now."
+        next_id: "result_outbox"
+
+  q_coupling:
+    text: "How do your teams get along regarding deployments?"
+    answers:
+      hand_in_hand:
+        text: "We hold hands and deploy the 'Platform' together once a month."
+        next_id: "result_monolith"
+      anarchy:
+        text: "Anarchy. Teams deploy whenever they want, independent of others."
+        next_id: "result_nervous_system"
+      central_committee:
+        text: "We have a central committee that reviews every schema change."
+        next_id: "result_nervous_system"
