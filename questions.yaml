@@ -8,16 +8,16 @@ results:
     title: "🏠 The Monolith of Peace"
     verdict: "Just Use Postgres."
     description: |
-      You are building "Inside Data." According to Pat Helland, data inside a service boundary should be consistent and cozy.
+      You are building "Inside Data." Data inside a service boundary should be consistent and cozy.
 
       You don't have an engineering problem; you have a desire to over-engineer. Using Kafka here would be like using a semi-truck to deliver a pizza. It’s cool, but parking is a nightmare.
     recommendation: "Stick to a single Postgres instance. Enjoy your ACID transactions and JOINs while they last."
 
   result_outbox:
-    title: "📦 The Log in the Database"
-    verdict: "Use Postgres (with a twist)."
+    title: "📦 The Log"
+    verdict: "It's complicated."
     description: |
-      You are in the "Danger Zone." You need to decouple your services, but maintaining a Kafka cluster might cost you your sanity (or your weekends).
+      You are in the "Danger Zone". You need to decouple your services, but maintaining a Kafka cluster might cost you your sanity (or your weekends).
 
       You need the *semantics* of a Log without the *infrastructure* of a Log.
     recommendation: |
@@ -95,5 +95,5 @@ questions:
         text: "Anarchy. Teams deploy whenever they want, independent of others."
         next_id: "result_nervous_system"
       central_committee:
-        text: "We have a central committee that reviews every schema change."
+        text: "We have a central committee that reviews every change."
         next_id: "result_nervous_system"

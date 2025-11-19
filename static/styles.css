@@ -33,6 +33,10 @@ body {
     padding: 20px;
 }
 
+a {
+    color: var(--text-primary);
+}
+
 /* --- LAYOUT --- */
 .container {
     width: 100%;
