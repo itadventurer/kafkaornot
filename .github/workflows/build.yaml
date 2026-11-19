@@ -56,7 +56,7 @@ jobs:
                 # Not `rollout restart`: Flux strips fields of managers named kubectl* and rolls back.
                 kubectl patch deployment/kafkaornot-io -n kafkaornot-io \
                   --field-manager=ci-deploy --type=merge \
-                  -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-deploy/commit\":\"${{ github.sha }}\",\"ci-deploy/pipeline\":\"${{ github.run_id }}-${{ github.run_attempt }}\"}}}}}"
+                  -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-deploy/commit\":\"${{ github.sha }}\",\"ci-deploy/run\":\"${{ github.run_id }}-${{ github.run_attempt }}\"}}}}}"
                 # A new run (or attempt) also changes the template when the same commit is deployed again.
                 # Wait for the rollout with `get` only, so the step needs no list/watch.
                 done_=""
