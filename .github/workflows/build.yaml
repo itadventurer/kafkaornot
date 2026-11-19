@@ -41,6 +41,9 @@ jobs:
             ### Restart deployments
             - name: Install kubectl
               uses: azure/setup-kubectl@v3
+              with:
+                # Client within one minor version of the cluster (v1.35.2).
+                version: v1.35.4
 
             - name: Set Kubernetes Context
               run: |
@@ -48,6 +51,21 @@ jobs:
                   echo "${{ secrets.REDEPLOYER_KUBECONFIG }}" > ${HOME}/.kube/config
                   chmod 600 ${HOME}/.kube/config
 
-            - name: Restart Deployment
+            - name: Roll out Deployment
               run: |
-                  kubectl rollout restart deployment/kafkaornot-io -n kafkaornot-io
+                # Not `rollout restart`: Flux strips fields of managers named kubectl* and rolls back.
+                kubectl patch deployment/kafkaornot-io -n kafkaornot-io \
+                  --field-manager=ci-deploy --type=merge \
+                  -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-deploy/commit\":\"${{ github.sha }}\"}}}}}"
+                # Wait for the rollout with `get` only; `rollout status` needs list/watch.
+                done_=""
+                for i in $(seq 60); do
+                  s=$(kubectl get deployment/kafkaornot-io -n kafkaornot-io -o jsonpath='{.metadata.generation}/{.status.observedGeneration}/{.spec.replicas}/{.status.updatedReplicas}/{.status.replicas}/{.status.availableReplicas}' || true)
+                  echo "kafkaornot-io generation/observed/wanted/updated/current/available: $s"
+                  IFS=/; set -- $s; unset IFS
+                  if [ -n "$1" ] && [ "${2:-0}" -ge "$1" ] && [ "${4:-0}" -eq "$3" ] && [ "${5:-0}" -eq "$3" ] && [ "${6:-0}" -eq "$3" ]; then
+                    done_=1; break
+                  fi
+                  sleep 5
+                done
+                [ -n "$done_" ] || { echo "Rollout of kafkaornot-io not finished after 5 minutes" >&2; exit 1; }
