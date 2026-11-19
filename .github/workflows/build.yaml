@@ -56,12 +56,18 @@ jobs:
                 # Not `rollout restart`: Flux strips fields of managers named kubectl* and rolls back.
                 kubectl patch deployment/kafkaornot-io -n kafkaornot-io \
                   --field-manager=ci-deploy --type=merge \
-                  -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-deploy/commit\":\"${{ github.sha }}\"}}}}}"
-                # Wait for the rollout with `get` only; `rollout status` needs list/watch.
+                  -p "{\"spec\":{\"template\":{\"metadata\":{\"annotations\":{\"ci-deploy/commit\":\"${{ github.sha }}\",\"ci-deploy/pipeline\":\"${{ github.run_id }}-${{ github.run_attempt }}\"}}}}}"
+                # A new run (or attempt) also changes the template when the same commit is deployed again.
+                # Wait for the rollout with `get` only, so the step needs no list/watch.
                 done_=""
                 for i in $(seq 60); do
-                  s=$(kubectl get deployment/kafkaornot-io -n kafkaornot-io -o jsonpath='{.metadata.generation}/{.status.observedGeneration}/{.spec.replicas}/{.status.updatedReplicas}/{.status.replicas}/{.status.availableReplicas}' || true)
-                  echo "kafkaornot-io generation/observed/wanted/updated/current/available: $s"
+                  if ! s=$(kubectl get deployment/kafkaornot-io -n kafkaornot-io -o jsonpath='{.metadata.generation}/{.status.observedGeneration}/{.spec.replicas}/{.status.updatedReplicas}/{.status.replicas}/{.status.availableReplicas}' 2>/tmp/get.err); then
+                    cat /tmp/get.err >&2
+                    # Fail at once on a permission or lookup error, retry only transient ones.
+                    if grep -qE 'Forbidden|NotFound|Unauthorized' /tmp/get.err; then exit 1; fi
+                    s=""
+                  fi
+                  echo "generation/observed/wanted/updated/current/available: $s"
                   IFS=/; set -- $s; unset IFS
                   if [ -n "$1" ] && [ "${2:-0}" -ge "$1" ] && [ "${4:-0}" -eq "$3" ] && [ "${5:-0}" -eq "$3" ] && [ "${6:-0}" -eq "$3" ]; then
                     done_=1; break
