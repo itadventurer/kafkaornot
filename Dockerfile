@@ -1,5 +1,5 @@
 # Use a lightweight Python base image
-FROM python:3.11-slim
+FROM python:3.14-slim-trixie
 
 # Set the working directory in the container
 WORKDIR /app
@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 5000
 
 # Run the application with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--no-control-socket", "app:app"]
